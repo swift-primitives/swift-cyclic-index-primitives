@@ -23,7 +23,7 @@ extension Tagged where RawValue == Ordinal, Tag: ~Copyable {
     /// ## Example
     ///
     /// ```swift
-    /// var idx = try Index<MyTag>.Cyclic<5>.init(4)
+    /// var idx = try Index<MyTag>.Cyclic<5>.init(Ordinal(4))
     /// idx += .one  // Wraps to 0
     /// idx -= .one  // Wraps to 4
     /// ```
@@ -82,20 +82,42 @@ public func -= <Tag: ~Copyable, let N: Int>(
     rhs: Cyclic.Group<N>.Element
 ) { lhs = Tagged(__unchecked: (), lhs.rawValue - rhs) }
 
-// MARK: - Construction
+// MARK: - Construction from Ordinal
+
+extension Tagged where Tag: ~Copyable {
+    /// Creates a cyclic index from an ordinal position.
+    ///
+    /// - Parameter position: The ordinal position (must be in `0..<N`).
+    /// - Throws: `Cyclic.Group<N>.Element.Error.outOfBounds` if position is invalid.
+    public init<let N: Int>(_ position: Ordinal) throws(Cyclic_Primitives.Cyclic.Group<N>.Element.Error)
+    where RawValue == Cyclic_Primitives.Cyclic.Group<N>.Element {
+        self.init(__unchecked: (), try Cyclic_Primitives.Cyclic.Group<N>.Element(position))
+    }
+
+    /// Creates a cyclic index without bounds checking.
+    ///
+    /// - Parameter position: Must be in `0..<N`.
+    /// - Warning: No validation is performed. Use only when the value
+    ///   is known to be in bounds.
+    public init<let N: Int>(__unchecked position: Ordinal)
+    where RawValue == Cyclic_Primitives.Cyclic.Group<N>.Element {
+        self.init(__unchecked: (), Cyclic_Primitives.Cyclic.Group<N>.Element(__unchecked: position))
+    }
+}
+
+// MARK: - Construction from Int (convenience)
 
 extension Tagged where Tag: ~Copyable {
     /// Creates a cyclic index from an integer position.
     ///
     /// - Parameter position: The position value (must be in `0..<N`).
-    /// - Throws: `Cyclic.Group.Element<N>.outOfBounds` if position is invalid.
+    /// - Throws: `Cyclic.Group<N>.Element.Error.outOfBounds` if position is invalid.
     public init<let N: Int>(_ position: Int) throws(Cyclic_Primitives.Cyclic.Group<N>.Element.Error)
     where RawValue == Cyclic_Primitives.Cyclic.Group<N>.Element {
-        do {
-            self.init(__unchecked: (), try Cyclic_Primitives.Cyclic.Group<N>.Element(position))
-        } catch {
+        guard position >= 0 else {
             throw .outOfBounds(position)
         }
+        self.init(__unchecked: (), try Cyclic_Primitives.Cyclic.Group<N>.Element(Ordinal(UInt(position))))
     }
 
     /// Creates a cyclic index without bounds checking.
@@ -105,6 +127,6 @@ extension Tagged where Tag: ~Copyable {
     ///   is known to be in bounds.
     public init<let N: Int>(__unchecked position: Int)
     where RawValue == Cyclic_Primitives.Cyclic.Group<N>.Element {
-        self.init(__unchecked: (), Cyclic_Primitives.Cyclic.Group<N>.Element(__unchecked: (), position))
+        self.init(__unchecked: (), Cyclic_Primitives.Cyclic.Group<N>.Element(__unchecked: Ordinal(UInt(position))))
     }
 }

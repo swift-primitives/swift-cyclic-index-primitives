@@ -29,25 +29,25 @@ extension IndexCyclicTests.Construction {
     @Test("init with valid position returns index")
     func initValid() throws {
         let index = try Index<Int>.Cyclic<5>.init(3)
-        #expect(index.rawValue.rawValue == 3)
+        #expect(index == 3)
     }
 
     @Test("init with zero returns index")
     func initZero() throws {
         let index = try Index<Int>.Cyclic<10>.init(0)
-        #expect(index.rawValue.rawValue == 0)
+        #expect(index == 0)
     }
 
     @Test("init with max valid position returns index")
     func initMaxValid() throws {
         let index = try Index<Int>.Cyclic<5>.init(4)  // N-1
-        #expect(index.rawValue.rawValue == 4)
+        #expect(index == 4)
     }
 
     @Test("unchecked init bypasses validation")
     func uncheckedInit() {
         let index = Index<Int>.Cyclic<5>.init(__unchecked: 3)
-        #expect(index.rawValue.rawValue == 3)
+        #expect(index == 3)
     }
 
     @Test("init with negative position throws error")
@@ -80,7 +80,7 @@ extension IndexCyclicTests.Arithmetic {
         let a = try Index<Int>.Cyclic<10>.init(3)
         let b = try Index<Int>.Cyclic<10>.init(4)
         let result = a + b
-        #expect(result.rawValue.rawValue == 7)
+        #expect(result == 7)
     }
 
     @Test("subtraction of two cyclic indices")
@@ -88,7 +88,7 @@ extension IndexCyclicTests.Arithmetic {
         let a = try Index<Int>.Cyclic<10>.init(7)
         let b = try Index<Int>.Cyclic<10>.init(3)
         let result = a - b
-        #expect(result.rawValue.rawValue == 4)
+        #expect(result == 4)
     }
 
     @Test("compound addition assignment")
@@ -96,7 +96,7 @@ extension IndexCyclicTests.Arithmetic {
         var index = try Index<Int>.Cyclic<10>.init(3)
         let addend = try Index<Int>.Cyclic<10>.init(2)
         index += addend
-        #expect(index.rawValue.rawValue == 5)
+        #expect(index == 5)
     }
 
     @Test("compound subtraction assignment")
@@ -104,56 +104,56 @@ extension IndexCyclicTests.Arithmetic {
         var index = try Index<Int>.Cyclic<10>.init(5)
         let subtrahend = try Index<Int>.Cyclic<10>.init(2)
         index -= subtrahend
-        #expect(index.rawValue.rawValue == 3)
+        #expect(index == 3)
     }
 
     @Test("addition with .one element")
     func additionWithOne() throws {
         let index = try Index<Int>.Cyclic<10>.init(3)
         let result = index + .one
-        #expect(result.rawValue.rawValue == 4)
+        #expect(result == 4)
     }
 
     @Test("subtraction with .one element")
     func subtractionWithOne() throws {
         let index = try Index<Int>.Cyclic<10>.init(3)
         let result = index - .one
-        #expect(result.rawValue.rawValue == 2)
+        #expect(result == 2)
     }
 
     @Test("addition with .zero element")
     func additionWithZero() throws {
         let index = try Index<Int>.Cyclic<10>.init(5)
         let result = index + .zero
-        #expect(index.rawValue.rawValue == 5)
+        #expect(result == 5)
     }
 
     @Test("compound addition with element")
     func compoundAdditionElement() throws {
         var index = try Index<Int>.Cyclic<10>.init(3)
         index += .one
-        #expect(index.rawValue.rawValue == 4)
+        #expect(index == 4)
     }
 
     @Test("compound subtraction with element")
     func compoundSubtractionElement() throws {
         var index = try Index<Int>.Cyclic<10>.init(3)
         index -= .one
-        #expect(index.rawValue.rawValue == 2)
+        #expect(index == 2)
     }
 
     @Test("cyclic addition wraps at bound")
     func cyclicAdditionWrap() throws {
         let index = try Index<Int>.Cyclic<5>.init(4)  // N-1
         let result = index + .one
-        #expect(result.rawValue.rawValue == 0)  // Wraps to 0
+        #expect(result == 0)  // Wraps to 0
     }
 
     @Test("cyclic subtraction wraps at zero")
     func cyclicSubtractionWrap() throws {
         let index = try Index<Int>.Cyclic<5>.init(0)
         let result = index - .one
-        #expect(result.rawValue.rawValue == 4)  // Wraps to N-1
+        #expect(result == 4)  // Wraps to N-1
     }
 
     @Test("multiple wrap-arounds")
@@ -163,7 +163,7 @@ extension IndexCyclicTests.Arithmetic {
         index += .one  // 2
         index += .one  // 0 (wrap)
         index += .one  // 1
-        #expect(index.rawValue.rawValue == 1)
+        #expect(index == 1)
     }
 }
 
@@ -221,10 +221,10 @@ extension IndexCyclicTests.EdgeCase {
     func singleElement() throws {
         let index = try Index<Int>.Cyclic<1>.init(0)
         let incremented = index + .one
-        #expect(incremented.rawValue.rawValue == 0)  // Wraps back to 0
+        #expect(incremented == 0)  // Wraps back to 0
 
         let decremented = index - .one
-        #expect(decremented.rawValue.rawValue == 0)  // Wraps back to 0
+        #expect(decremented == 0)  // Wraps back to 0
     }
 
     @Test("different phantom types are incompatible")
@@ -235,8 +235,9 @@ extension IndexCyclicTests.EdgeCase {
         let a = try Index<TagA>.Cyclic<5>.init(3)
         let b = try Index<TagB>.Cyclic<5>.init(3)
 
-        // These should have the same raw value but different types
-        #expect(a.rawValue.rawValue == b.rawValue.rawValue)
+        // Both equal 3, but different types prevent direct comparison
+        #expect(a == 3)
+        #expect(b == 3)
         #expect(type(of: a) != type(of: b))
 
         // Cannot compare a == b due to different types (compile-time safety)
