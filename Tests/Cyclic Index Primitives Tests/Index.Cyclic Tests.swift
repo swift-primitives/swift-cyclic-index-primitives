@@ -52,21 +52,21 @@ extension IndexCyclicTests.Construction {
 
     @Test("init with negative position throws error")
     func negativePosition() {
-        #expect(throws: Cyclic.Group<5>.Element.Error.outOfBounds(-1)) {
+        #expect(throws: Cyclic.Group.Static<5>.Element.Error.outOfBounds(-1)) {
             _ = try Index<Int>.Cyclic<5>.init(-1)
         }
     }
 
     @Test("init at bound N throws error")
     func atBound() {
-        #expect(throws: Cyclic.Group<5>.Element.Error.outOfBounds(5)) {
+        #expect(throws: Cyclic.Group.Static<5>.Element.Error.outOfBounds(5)) {
             _ = try Index<Int>.Cyclic<5>.init(5)
         }
     }
 
     @Test("init beyond bound throws error")
     func beyondBound() {
-        #expect(throws: Cyclic.Group<5>.Element.Error.outOfBounds(100)) {
+        #expect(throws: Cyclic.Group.Static<5>.Element.Error.outOfBounds(100)) {
             _ = try Index<Int>.Cyclic<5>.init(100)
         }
     }
@@ -246,24 +246,24 @@ extension IndexCyclicTests.EdgeCase {
     @Test("rawValue access returns cyclic element")
     func rawValueAccess() throws {
         let index = try Index<Int>.Cyclic<5>.init(3)
-        let element: Cyclic.Group<5>.Element = index.rawValue
+        let element: Cyclic.Group.Static<5>.Element = index.rawValue
         #expect(element == 3)
     }
 
     @Test("CyclicIndexError is Hashable")
     func errorHashable() {
-        let error1 = Cyclic.Group<5>.Element.Error.outOfBounds(10)
-        let error2 = Cyclic.Group<5>.Element.Error.outOfBounds(10)
-        let error3 = Cyclic.Group<5>.Element.Error.outOfBounds(20)
+        let error1 = Cyclic.Group.Static<5>.Element.Error.outOfBounds(10)
+        let error2 = Cyclic.Group.Static<5>.Element.Error.outOfBounds(10)
+        let error3 = Cyclic.Group.Static<5>.Element.Error.outOfBounds(20)
         #expect(error1 == error2)
         #expect(error1 != error3)
     }
 
     @Test("CyclicIndexError is Sendable")
     func errorSendable() async {
-        let error = Cyclic.Group<5>.Element.Error.outOfBounds(10)
+        let error = Cyclic.Group.Static<5>.Element.Error.outOfBounds(10)
         await Task {
-            #expect(error == Cyclic.Group<5>.Element.Error.outOfBounds(10))
+            #expect(error == Cyclic.Group.Static<5>.Element.Error.outOfBounds(10))
         }.value
     }
 }
