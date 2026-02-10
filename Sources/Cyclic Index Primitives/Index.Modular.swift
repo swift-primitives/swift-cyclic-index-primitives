@@ -13,33 +13,35 @@ import Cyclic_Primitives
 
 // MARK: - Dynamic Modular Index Operations
 
-/// Namespace for dynamic modular index operations.
-///
-/// Provides cyclic/modular arithmetic operations for indices with runtime capacity.
-/// Use these operations for ring buffers and circular data structures where
-/// capacity is not known at compile time.
-///
-/// For compile-time capacity, use `Index<Tag>.Cyclic<N>` instead.
-///
-/// ## Usage
-///
-/// ```swift
-/// let capacity: Index<Element>.Count = ...
-/// var head: Index<Element> = .zero
-///
-/// // Advance with wrapping
-/// head = Modular.successor(of: head, capacity: capacity)
-///
-/// // Convert logical to physical index
-/// let physical = Modular.physical(
-///     forLogical: logicalIndex,
-///     head: head,
-///     capacity: capacity
-/// )
-/// ```
-public enum Modular {}
+extension Tagged where RawValue == Ordinal, Tag: ~Copyable {
+    /// Namespace for dynamic modular index operations.
+    ///
+    /// Provides cyclic/modular arithmetic operations for indices with runtime capacity.
+    /// Use these operations for ring buffers and circular data structures where
+    /// capacity is not known at compile time.
+    ///
+    /// For compile-time capacity, use `Index<Tag>.Cyclic<N>` instead.
+    ///
+    /// ## Usage
+    ///
+    /// ```swift
+    /// let capacity: Index<Element>.Count = ...
+    /// var head: Index<Element> = .zero
+    ///
+    /// // Advance with wrapping
+    /// head = Index<Element>.Modular.successor(of: head, capacity: capacity)
+    ///
+    /// // Convert logical to physical index
+    /// let physical = Index<Element>.Modular.physical(
+    ///     forLogical: logicalIndex,
+    ///     head: head,
+    ///     capacity: capacity
+    /// )
+    /// ```
+    public enum Modular {}
+}
 
-extension Modular {
+extension Tagged.Modular where RawValue == Ordinal, Tag: ~Copyable {
     /// Advances an index by one position, wrapping at capacity.
     ///
     /// - Parameters:
@@ -48,12 +50,12 @@ extension Modular {
     /// - Returns: The successor index wrapped to `0..<capacity`.
     /// - Complexity: O(1)
     @inlinable
-    public static func successor<Tag: ~Copyable>(
+    public static func successor(
         of index: Index<Tag>,
         capacity: Index<Tag>.Count
     ) -> Index<Tag> {
-        let modulus = Cyclic_Primitives.Cyclic.Group.Modulus(__unchecked: capacity.rawValue)
-        let element = Cyclic_Primitives.Cyclic.Group.Element(__unchecked: index.position)
+        let modulus = Cyclic_Primitives.Cyclic.Group.Modulus(__unchecked: capacity)
+        let element = Cyclic_Primitives.Cyclic.Group.Element(__unchecked: index)
         let result = Cyclic_Primitives.Cyclic.Group.successor(element, modulus: modulus)
         return Index<Tag>(result.residue)
     }
@@ -66,12 +68,12 @@ extension Modular {
     /// - Returns: The predecessor index wrapped to `0..<capacity`.
     /// - Complexity: O(1)
     @inlinable
-    public static func predecessor<Tag: ~Copyable>(
+    public static func predecessor(
         of index: Index<Tag>,
         capacity: Index<Tag>.Count
     ) -> Index<Tag> {
-        let modulus = Cyclic_Primitives.Cyclic.Group.Modulus(__unchecked: capacity.rawValue)
-        let element = Cyclic_Primitives.Cyclic.Group.Element(__unchecked: index.position)
+        let modulus = Cyclic_Primitives.Cyclic.Group.Modulus(__unchecked: capacity)
+        let element = Cyclic_Primitives.Cyclic.Group.Element(__unchecked: index)
         let result = Cyclic_Primitives.Cyclic.Group.predecessor(element, modulus: modulus)
         return Index<Tag>(result.residue)
     }
@@ -85,13 +87,13 @@ extension Modular {
     /// - Returns: The resulting index wrapped to `0..<capacity`.
     /// - Complexity: O(1)
     @inlinable
-    public static func advanced<Tag: ~Copyable>(
+    public static func advanced(
         _ index: Index<Tag>,
         by offset: Index<Tag>.Offset,
         capacity: Index<Tag>.Count
     ) -> Index<Tag> {
-        let modulus = Cyclic_Primitives.Cyclic.Group.Modulus(__unchecked: capacity.rawValue)
-        let element = Cyclic_Primitives.Cyclic.Group.Element(__unchecked: index.position)
+        let modulus = Cyclic_Primitives.Cyclic.Group.Modulus(__unchecked: capacity)
+        let element = Cyclic_Primitives.Cyclic.Group.Element(__unchecked: index)
         let result = Cyclic_Primitives.Cyclic.Group.advanced(element, by: offset, modulus: modulus)
         return Index<Tag>(result.residue)
     }
@@ -108,14 +110,14 @@ extension Modular {
     /// - Returns: The physical storage index.
     /// - Complexity: O(1)
     @inlinable
-    public static func physical<Tag: ~Copyable>(
+    public static func physical(
         forLogical logicalIndex: Index<Tag>,
         head: Index<Tag>,
         capacity: Index<Tag>.Count
     ) -> Index<Tag> {
-        let modulus = Cyclic_Primitives.Cyclic.Group.Modulus(__unchecked: capacity.rawValue)
-        let headElement = Cyclic_Primitives.Cyclic.Group.Element(__unchecked: head.position)
-        let logicalElement = Cyclic_Primitives.Cyclic.Group.Element(__unchecked: logicalIndex.position)
+        let modulus = Cyclic_Primitives.Cyclic.Group.Modulus(__unchecked: capacity)
+        let headElement = Cyclic_Primitives.Cyclic.Group.Element(__unchecked: head)
+        let logicalElement = Cyclic_Primitives.Cyclic.Group.Element(__unchecked: logicalIndex)
         let result = Cyclic_Primitives.Cyclic.Group.add(headElement, logicalElement, modulus: modulus)
         return Index<Tag>(result.residue)
     }

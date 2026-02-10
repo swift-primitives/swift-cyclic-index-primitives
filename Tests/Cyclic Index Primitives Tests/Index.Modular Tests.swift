@@ -22,7 +22,7 @@ struct IndexModularOperationsTests {
     func successorNoWrap() {
         let capacity = Index<Int>.Count(Cardinal(5))
         let index = Index<Int>(Ordinal(2))
-        let next = Modular.successor(of: index, capacity: capacity)
+        let next = Index<Int>.Modular.successor(of: index, capacity: capacity)
         #expect(next.position == Ordinal(3))
     }
 
@@ -30,7 +30,7 @@ struct IndexModularOperationsTests {
     func successorWithWrap() {
         let capacity = Index<Int>.Count(Cardinal(5))
         let index = Index<Int>(Ordinal(4))
-        let next = Modular.successor(of: index, capacity: capacity)
+        let next = Index<Int>.Modular.successor(of: index, capacity: capacity)
         #expect(next.position == Ordinal(0))
     }
 
@@ -40,7 +40,7 @@ struct IndexModularOperationsTests {
     func predecessorNoWrap() {
         let capacity = Index<Int>.Count(Cardinal(5))
         let index = Index<Int>(Ordinal(3))
-        let prev = Modular.predecessor(of: index, capacity: capacity)
+        let prev = Index<Int>.Modular.predecessor(of: index, capacity: capacity)
         #expect(prev.position == Ordinal(2))
     }
 
@@ -48,7 +48,7 @@ struct IndexModularOperationsTests {
     func predecessorWithWrap() {
         let capacity = Index<Int>.Count(Cardinal(5))
         let index = Index<Int>(Ordinal(0))
-        let prev = Modular.predecessor(of: index, capacity: capacity)
+        let prev = Index<Int>.Modular.predecessor(of: index, capacity: capacity)
         #expect(prev.position == Ordinal(4))
     }
 
@@ -59,7 +59,7 @@ struct IndexModularOperationsTests {
         let capacity = Index<Int>.Count(Cardinal(10))
         let index = Index<Int>(Ordinal(2))
         let offset = Index<Int>.Offset(3)
-        let result = Modular.advanced(index, by: offset, capacity: capacity)
+        let result = Index<Int>.Modular.advanced(index, by: offset, capacity: capacity)
         #expect(result.position == Ordinal(5))
     }
 
@@ -68,7 +68,7 @@ struct IndexModularOperationsTests {
         let capacity = Index<Int>.Count(Cardinal(5))
         let index = Index<Int>(Ordinal(3))
         let offset = Index<Int>.Offset(4)
-        let result = Modular.advanced(index, by: offset, capacity: capacity)
+        let result = Index<Int>.Modular.advanced(index, by: offset, capacity: capacity)
         #expect(result.position == Ordinal(2))  // (3 + 4) mod 5 = 2
     }
 
@@ -77,7 +77,7 @@ struct IndexModularOperationsTests {
         let capacity = Index<Int>.Count(Cardinal(10))
         let index = Index<Int>(Ordinal(5))
         let offset = Index<Int>.Offset(-2)
-        let result = Modular.advanced(index, by: offset, capacity: capacity)
+        let result = Index<Int>.Modular.advanced(index, by: offset, capacity: capacity)
         #expect(result.position == Ordinal(3))
     }
 
@@ -86,7 +86,7 @@ struct IndexModularOperationsTests {
         let capacity = Index<Int>.Count(Cardinal(5))
         let index = Index<Int>(Ordinal(1))
         let offset = Index<Int>.Offset(-3)
-        let result = Modular.advanced(index, by: offset, capacity: capacity)
+        let result = Index<Int>.Modular.advanced(index, by: offset, capacity: capacity)
         #expect(result.position == Ordinal(3))  // (1 - 3 + 5) mod 5 = 3
     }
 
@@ -97,7 +97,7 @@ struct IndexModularOperationsTests {
         let capacity = Index<Int>.Count(Cardinal(10))
         let head = Index<Int>(Ordinal(2))
         let logical = Index<Int>(Ordinal(3))
-        let physical = Modular.physical(forLogical: logical, head: head, capacity: capacity)
+        let physical = Index<Int>.Modular.physical(forLogical: logical, head: head, capacity: capacity)
         #expect(physical.position == Ordinal(5))  // 2 + 3 = 5
     }
 
@@ -106,7 +106,7 @@ struct IndexModularOperationsTests {
         let capacity = Index<Int>.Count(Cardinal(5))
         let head = Index<Int>(Ordinal(3))
         let logical = Index<Int>(Ordinal(4))
-        let physical = Modular.physical(forLogical: logical, head: head, capacity: capacity)
+        let physical = Index<Int>.Modular.physical(forLogical: logical, head: head, capacity: capacity)
         #expect(physical.position == Ordinal(2))  // (3 + 4) mod 5 = 2
     }
 
@@ -119,21 +119,21 @@ struct IndexModularOperationsTests {
         var tail = Index<Int>(Ordinal(0))
 
         // Enqueue 3 elements
-        tail = Modular.successor(of: tail, capacity: capacity)  // 1
-        tail = Modular.successor(of: tail, capacity: capacity)  // 2
-        tail = Modular.successor(of: tail, capacity: capacity)  // 3
+        tail = Index<Int>.Modular.successor(of: tail, capacity: capacity)  // 1
+        tail = Index<Int>.Modular.successor(of: tail, capacity: capacity)  // 2
+        tail = Index<Int>.Modular.successor(of: tail, capacity: capacity)  // 3
 
         #expect(head.position == Ordinal(0))
         #expect(tail.position == Ordinal(3))
 
         // Dequeue 1 element
-        head = Modular.successor(of: head, capacity: capacity)  // 1
+        head = Index<Int>.Modular.successor(of: head, capacity: capacity)  // 1
 
         #expect(head.position == Ordinal(1))
 
         // Enqueue 2 more (should wrap)
-        tail = Modular.successor(of: tail, capacity: capacity)  // 0 (wrap)
-        tail = Modular.successor(of: tail, capacity: capacity)  // 1
+        tail = Index<Int>.Modular.successor(of: tail, capacity: capacity)  // 0 (wrap)
+        tail = Index<Int>.Modular.successor(of: tail, capacity: capacity)  // 1
 
         #expect(tail.position == Ordinal(1))
     }
