@@ -18,16 +18,16 @@ struct IndexModularOperationsTests {
 
     // MARK: - Successor
 
-    @Test("successor without wrap")
-    func successorNoWrap() {
+    @Test
+    func `successor without wrap`() {
         let capacity = Index<Int>.Count(Cardinal(5))
         let index = Index<Int>(Ordinal(2))
         let next = Index<Int>.Modular.successor(of: index, capacity: capacity)
         #expect(next.position == Ordinal(3))
     }
 
-    @Test("successor with wrap")
-    func successorWithWrap() {
+    @Test
+    func `successor with wrap`() {
         let capacity = Index<Int>.Count(Cardinal(5))
         let index = Index<Int>(Ordinal(4))
         let next = Index<Int>.Modular.successor(of: index, capacity: capacity)
@@ -36,16 +36,16 @@ struct IndexModularOperationsTests {
 
     // MARK: - Predecessor
 
-    @Test("predecessor without wrap")
-    func predecessorNoWrap() {
+    @Test
+    func `predecessor without wrap`() {
         let capacity = Index<Int>.Count(Cardinal(5))
         let index = Index<Int>(Ordinal(3))
         let prev = Index<Int>.Modular.predecessor(of: index, capacity: capacity)
         #expect(prev.position == Ordinal(2))
     }
 
-    @Test("predecessor with wrap")
-    func predecessorWithWrap() {
+    @Test
+    func `predecessor with wrap`() {
         let capacity = Index<Int>.Count(Cardinal(5))
         let index = Index<Int>(Ordinal(0))
         let prev = Index<Int>.Modular.predecessor(of: index, capacity: capacity)
@@ -54,8 +54,8 @@ struct IndexModularOperationsTests {
 
     // MARK: - Advanced
 
-    @Test("advanced positive offset without wrap")
-    func advancedPositiveNoWrap() {
+    @Test
+    func `advanced positive offset without wrap`() {
         let capacity = Index<Int>.Count(Cardinal(10))
         let index = Index<Int>(Ordinal(2))
         let offset = Index<Int>.Offset(3)
@@ -63,8 +63,8 @@ struct IndexModularOperationsTests {
         #expect(result.position == Ordinal(5))
     }
 
-    @Test("advanced positive offset with wrap")
-    func advancedPositiveWithWrap() {
+    @Test
+    func `advanced positive offset with wrap`() {
         let capacity = Index<Int>.Count(Cardinal(5))
         let index = Index<Int>(Ordinal(3))
         let offset = Index<Int>.Offset(4)
@@ -72,8 +72,8 @@ struct IndexModularOperationsTests {
         #expect(result.position == Ordinal(2))  // (3 + 4) mod 5 = 2
     }
 
-    @Test("advanced negative offset without wrap")
-    func advancedNegativeNoWrap() {
+    @Test
+    func `advanced negative offset without wrap`() {
         let capacity = Index<Int>.Count(Cardinal(10))
         let index = Index<Int>(Ordinal(5))
         let offset = Index<Int>.Offset(-2)
@@ -81,8 +81,8 @@ struct IndexModularOperationsTests {
         #expect(result.position == Ordinal(3))
     }
 
-    @Test("advanced negative offset with wrap")
-    func advancedNegativeWithWrap() {
+    @Test
+    func `advanced negative offset with wrap`() {
         let capacity = Index<Int>.Count(Cardinal(5))
         let index = Index<Int>(Ordinal(1))
         let offset = Index<Int>.Offset(-3)
@@ -92,8 +92,8 @@ struct IndexModularOperationsTests {
 
     // MARK: - Physical Index
 
-    @Test("physical index without wrap")
-    func physicalNoWrap() {
+    @Test
+    func `physical index without wrap`() {
         let capacity = Index<Int>.Count(Cardinal(10))
         let head = Index<Int>(Ordinal(2))
         let logical = Index<Int>(Ordinal(3))
@@ -101,8 +101,8 @@ struct IndexModularOperationsTests {
         #expect(physical.position == Ordinal(5))  // 2 + 3 = 5
     }
 
-    @Test("physical index with wrap")
-    func physicalWithWrap() {
+    @Test
+    func `physical index with wrap`() {
         let capacity = Index<Int>.Count(Cardinal(5))
         let head = Index<Int>(Ordinal(3))
         let logical = Index<Int>(Ordinal(4))
@@ -112,8 +112,8 @@ struct IndexModularOperationsTests {
 
     // MARK: - Ring Buffer Simulation
 
-    @Test("ring buffer simulation")
-    func ringBufferSimulation() {
+    @Test
+    func `ring buffer simulation`() {
         let capacity = Index<Int>.Count(Cardinal(4))
         var head = Index<Int>(Ordinal(0))
         var tail = Index<Int>(Ordinal(0))
