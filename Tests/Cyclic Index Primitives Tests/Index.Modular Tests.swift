@@ -11,7 +11,7 @@
 
 import Testing
 @testable import Cyclic_Index_Primitives
-import Identity_Primitives_Test_Support
+import Tagged_Primitives_Test_Support
 
 @Suite("Index.Modular Operations (Dynamic)")
 struct IndexModularOperationsTests {
