@@ -11,91 +11,96 @@
 
 import Cyclic_Primitives
 
-// MARK: - Typealias
+// MARK: - Static Typealias
 
-extension Tagged where RawValue == Ordinal, Tag: ~Copyable {
-    /// `Index<Tag>.Cyclic<N>` = `Tagged<Tag, Cyclic.Group<N>.Element>`
+extension Tagged where Underlying == Ordinal, Tag: ~Copyable & ~Escapable {
+    /// A cyclic index where arithmetic wraps modulo N (compile-time modulus).
     ///
-    /// A cyclic index where arithmetic wraps modulo N.
+    /// `Index<Tag>.Cyclic<N>` aliases `Tagged<Tag, Cyclic.Group.Static<N>.Element>`.
     /// Use this for ring buffer indices, circular navigation, and other
-    /// bounded cyclic access patterns.
+    /// bounded cyclic access patterns with known capacity.
     ///
     /// ## Example
     ///
     /// ```swift
-    /// var idx = try Index<MyTag>.Cyclic<5>.init(4)
+    /// var idx = try Index<MyTag>.Cyclic<5>.init(Ordinal(4))
     /// idx += .one  // Wraps to 0
     /// idx -= .one  // Wraps to 4
     /// ```
-    public typealias Cyclic<let N: Int> = Tagged<Tag, Cyclic_Primitives.Cyclic.Group<N>.Element>
+    public typealias Cyclic<let N: Int> = Tagged<Tag, Cyclic_Primitives.Cyclic.Group.Static<N>.Element>
 }
 
 // MARK: - Operators (Tagged + Tagged)
-
-public func + <Tag: ~Copyable, let N: Int>(
-    lhs: Tagged<Tag, Cyclic.Group<N>.Element>,
-    rhs: Tagged<Tag, Cyclic.Group<N>.Element>
-) -> Tagged<Tag, Cyclic.Group<N>.Element> {
-    Tagged(__unchecked: (), lhs.rawValue + rhs.rawValue)
-}
-
-public func - <Tag: ~Copyable, let N: Int>(
-    lhs: Tagged<Tag, Cyclic.Group<N>.Element>,
-    rhs: Tagged<Tag, Cyclic.Group<N>.Element>
-) -> Tagged<Tag, Cyclic.Group<N>.Element> {
-    Tagged(__unchecked: (), lhs.rawValue - rhs.rawValue)
-}
-
-public func += <Tag: ~Copyable, let N: Int>(
-    lhs: inout Tagged<Tag, Cyclic.Group<N>.Element>,
-    rhs: Tagged<Tag, Cyclic.Group<N>.Element>
-) { lhs = lhs + rhs }
-
-public func -= <Tag: ~Copyable, let N: Int>(
-    lhs: inout Tagged<Tag, Cyclic.Group<N>.Element>,
-    rhs: Tagged<Tag, Cyclic.Group<N>.Element>
-) { lhs = lhs - rhs }
+//
+// These operators are provided by Cyclic_Primitives (Tagged+Cyclic.Group.Static.Element.swift).
+// Re-exported via this module's exports.swift.
 
 // MARK: - Operators (Tagged + Element) — enables .zero/.one syntax
 
-public func + <Tag: ~Copyable, let N: Int>(
-    lhs: Tagged<Tag, Cyclic.Group<N>.Element>,
-    rhs: Cyclic.Group<N>.Element
-) -> Tagged<Tag, Cyclic.Group<N>.Element> {
-    Tagged(__unchecked: (), lhs.rawValue + rhs)
+/// Adds a cyclic group element to a tagged cyclic index, wrapping modulo N.
+public func + <Tag: ~Copyable & ~Escapable, let N: Int>(
+    lhs: Tagged<Tag, Cyclic.Group.Static<N>.Element>,
+    rhs: Cyclic.Group.Static<N>.Element
+) -> Tagged<Tag, Cyclic.Group.Static<N>.Element> {
+    Tagged(_unchecked: lhs.underlying + rhs)
 }
 
-public func - <Tag: ~Copyable, let N: Int>(
-    lhs: Tagged<Tag, Cyclic.Group<N>.Element>,
-    rhs: Cyclic.Group<N>.Element
-) -> Tagged<Tag, Cyclic.Group<N>.Element> {
-    Tagged(__unchecked: (), lhs.rawValue - rhs)
+/// Subtracts a cyclic group element from a tagged cyclic index, wrapping modulo N.
+public func - <Tag: ~Copyable & ~Escapable, let N: Int>(
+    lhs: Tagged<Tag, Cyclic.Group.Static<N>.Element>,
+    rhs: Cyclic.Group.Static<N>.Element
+) -> Tagged<Tag, Cyclic.Group.Static<N>.Element> {
+    Tagged(_unchecked: lhs.underlying - rhs)
 }
 
-public func += <Tag: ~Copyable, let N: Int>(
-    lhs: inout Tagged<Tag, Cyclic.Group<N>.Element>,
-    rhs: Cyclic.Group<N>.Element
-) { lhs = Tagged(__unchecked: (), lhs.rawValue + rhs) }
+/// Adds a cyclic group element into a tagged cyclic index in place, wrapping modulo N.
+public func += <Tag: ~Copyable & ~Escapable, let N: Int>(
+    lhs: inout Tagged<Tag, Cyclic.Group.Static<N>.Element>,
+    rhs: Cyclic.Group.Static<N>.Element
+) { lhs = Tagged(_unchecked: lhs.underlying + rhs) }
 
-public func -= <Tag: ~Copyable, let N: Int>(
-    lhs: inout Tagged<Tag, Cyclic.Group<N>.Element>,
-    rhs: Cyclic.Group<N>.Element
-) { lhs = Tagged(__unchecked: (), lhs.rawValue - rhs) }
+/// Subtracts a cyclic group element from a tagged cyclic index in place, wrapping modulo N.
+public func -= <Tag: ~Copyable & ~Escapable, let N: Int>(
+    lhs: inout Tagged<Tag, Cyclic.Group.Static<N>.Element>,
+    rhs: Cyclic.Group.Static<N>.Element
+) { lhs = Tagged(_unchecked: lhs.underlying - rhs) }
 
-// MARK: - Construction
+// MARK: - Construction from Ordinal
 
-extension Tagged where Tag: ~Copyable {
+extension Tagged where Tag: ~Copyable & ~Escapable {
+    /// Creates a cyclic index from an ordinal position.
+    ///
+    /// - Parameter position: The ordinal position (must be in `0..<N`).
+    /// - Throws: `Cyclic.Group.Static<N>.Element.Error.outOfBounds` if position is invalid.
+    public init<let N: Int>(_ position: Ordinal) throws(Cyclic_Primitives.Cyclic.Group.Static<N>.Element.Error)
+    where Underlying == Cyclic_Primitives.Cyclic.Group.Static<N>.Element {
+        self.init(_unchecked: try Cyclic_Primitives.Cyclic.Group.Static<N>.Element(position))
+    }
+
+    /// Creates a cyclic index without bounds checking.
+    ///
+    /// - Parameter position: Must be in `0..<N`.
+    /// - Warning: No validation is performed. Use only when the value
+    ///   is known to be in bounds.
+    public init<let N: Int>(__unchecked position: Ordinal)
+    where Underlying == Cyclic_Primitives.Cyclic.Group.Static<N>.Element {
+        self.init(_unchecked: Cyclic_Primitives.Cyclic.Group.Static<N>.Element(__unchecked: position))
+    }
+}
+
+// MARK: - Construction from Int (convenience)
+
+extension Tagged where Tag: ~Copyable & ~Escapable {
     /// Creates a cyclic index from an integer position.
     ///
     /// - Parameter position: The position value (must be in `0..<N`).
-    /// - Throws: `Cyclic.Group.Element<N>.outOfBounds` if position is invalid.
-    public init<let N: Int>(_ position: Int) throws(Cyclic_Primitives.Cyclic.Group<N>.Element.Error)
-    where RawValue == Cyclic_Primitives.Cyclic.Group<N>.Element {
-        do {
-            self.init(__unchecked: (), try Cyclic_Primitives.Cyclic.Group<N>.Element(position))
-        } catch {
+    /// - Throws: `Cyclic.Group.Static<N>.Element.Error.outOfBounds` if position is invalid.
+    public init<let N: Int>(_ position: Int) throws(Cyclic_Primitives.Cyclic.Group.Static<N>.Element.Error)
+    where Underlying == Cyclic_Primitives.Cyclic.Group.Static<N>.Element {
+        guard position >= 0 else {
             throw .outOfBounds(position)
         }
+        self.init(_unchecked: try Cyclic_Primitives.Cyclic.Group.Static<N>.Element(Ordinal(UInt(position))))
     }
 
     /// Creates a cyclic index without bounds checking.
@@ -104,7 +109,7 @@ extension Tagged where Tag: ~Copyable {
     /// - Warning: No validation is performed. Use only when the value
     ///   is known to be in bounds.
     public init<let N: Int>(__unchecked position: Int)
-    where RawValue == Cyclic_Primitives.Cyclic.Group<N>.Element {
-        self.init(__unchecked: (), Cyclic_Primitives.Cyclic.Group<N>.Element(__unchecked: (), position))
+    where Underlying == Cyclic_Primitives.Cyclic.Group.Static<N>.Element {
+        self.init(_unchecked: Cyclic_Primitives.Cyclic.Group.Static<N>.Element(__unchecked: Ordinal(UInt(position))))
     }
 }
