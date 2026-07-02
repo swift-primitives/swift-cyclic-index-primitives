@@ -1,6 +1,6 @@
 # .github/metadata.yaml
 # Triaged 2026-04-29 — anomaly-fix pass after wave-4 PR-branch triage didn't apply.
-description: "Cyclic index types for Swift."
+description: "Modular, wrap-around arithmetic over typed indices with compile-time and runtime moduli for ring buffers in Swift."
 topics:
   - primitives
   - cyclic
