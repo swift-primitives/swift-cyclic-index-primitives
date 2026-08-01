@@ -16,17 +16,20 @@ import Testing
 
 // MARK: - Cyclic Test Suites
 
-@Suite("Index.Cyclic")
-struct IndexCyclicTests {
-    @Suite struct Construction {}
-    @Suite struct Arithmetic {}
-    @Suite struct Conformances {}
-    @Suite struct EdgeCase {}
+@Suite
+struct `Index Cyclic Tests` {
+    @Suite struct Unit {
+        @Suite struct Construction {}
+        @Suite struct Arithmetic {}
+        @Suite struct Conformances {}
+    }
+    @Suite struct `Edge Case` {}
+    @Suite struct Integration {}
 }
 
 // MARK: - Construction Tests
 
-extension IndexCyclicTests.Construction {
+extension `Index Cyclic Tests`.Unit.Construction {
     @Test
     func `init with valid position returns index`() throws {
         let index = try Index<Int>.Cyclic<5>.init(3)
@@ -75,7 +78,7 @@ extension IndexCyclicTests.Construction {
 
 // MARK: - Arithmetic Tests
 
-extension IndexCyclicTests.Arithmetic {
+extension `Index Cyclic Tests`.Unit.Arithmetic {
     @Test
     func `addition of two cyclic indices`() throws {
         let a = try Index<Int>.Cyclic<10>.init(3)
@@ -170,7 +173,7 @@ extension IndexCyclicTests.Arithmetic {
 
 // MARK: - Conformance Tests
 
-extension IndexCyclicTests.Conformances {
+extension `Index Cyclic Tests`.Unit.Conformances {
     @Test
     func `cyclic indices are equatable`() throws {
         let a = try Index<Int>.Cyclic<5>.init(3)
@@ -217,7 +220,7 @@ extension IndexCyclicTests.Conformances {
 
 // MARK: - Edge Case Tests
 
-extension IndexCyclicTests.EdgeCase {
+extension `Index Cyclic Tests`.`Edge Case` {
     @Test
     func `single element cyclic space`() throws {
         let index = try Index<Int>.Cyclic<1>.init(0)
@@ -230,11 +233,11 @@ extension IndexCyclicTests.EdgeCase {
 
     @Test
     func `different phantom types are incompatible`() throws {
-        enum TagA {}
-        enum TagB {}
+        enum Alpha {}
+        enum Beta {}
 
-        let a = try Index<TagA>.Cyclic<5>.init(3)
-        let b = try Index<TagB>.Cyclic<5>.init(3)
+        let a = try Index<Alpha>.Cyclic<5>.init(3)
+        let b = try Index<Beta>.Cyclic<5>.init(3)
 
         // Both equal 3, but different types prevent direct comparison
         #expect(a == 3)
