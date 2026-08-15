@@ -118,7 +118,11 @@ extension Tagged.Modular where Underlying == Ordinal, Tag: ~Copyable & ~Escapabl
         let modulus = Cyclic_Primitives.Cyclic.Group.Modulus(__unchecked: capacity)
         let headElement = Cyclic_Primitives.Cyclic.Group.Element(__unchecked: head)
         let logicalElement = Cyclic_Primitives.Cyclic.Group.Element(__unchecked: logicalIndex)
-        let result = Cyclic_Primitives.Cyclic.Group.add(headElement, logicalElement, modulus: modulus)
+        let result = Cyclic_Primitives.Cyclic.Group.add(
+            headElement,
+            logicalElement,
+            modulus: modulus
+        )
         return Index<Tag>(result.residue)
     }
 }

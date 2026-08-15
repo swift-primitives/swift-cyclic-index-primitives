@@ -27,7 +27,9 @@ extension Tagged where Underlying == Ordinal, Tag: ~Copyable & ~Escapable {
     /// idx += .one  // Wraps to 0
     /// idx -= .one  // Wraps to 4
     /// ```
-    public typealias Cyclic<let N: Int> = Tagged<Tag, Cyclic_Primitives.Cyclic.Group.Static<N>.Element>
+    public typealias Cyclic<let N: Int> = Tagged<
+        Tag, Cyclic_Primitives.Cyclic.Group.Static<N>.Element
+    >
 }
 
 // MARK: - Operators (Tagged + Tagged)
@@ -72,7 +74,9 @@ extension Tagged where Tag: ~Copyable & ~Escapable {
     ///
     /// - Parameter position: The ordinal position (must be in `0..<N`).
     /// - Throws: `Cyclic.Group.Static<N>.Element.Error.outOfBounds` if position is invalid.
-    public init<let N: Int>(_ position: Ordinal) throws(Cyclic_Primitives.Cyclic.Group.Static<N>.Element.Error)
+    public init<let N: Int>(
+        _ position: Ordinal
+    ) throws(Cyclic_Primitives.Cyclic.Group.Static<N>.Element.Error)
     where Underlying == Cyclic_Primitives.Cyclic.Group.Static<N>.Element {
         self.init(_unchecked: try Cyclic_Primitives.Cyclic.Group.Static<N>.Element(position))
     }
@@ -84,7 +88,9 @@ extension Tagged where Tag: ~Copyable & ~Escapable {
     ///   is known to be in bounds.
     public init<let N: Int>(__unchecked position: Ordinal)
     where Underlying == Cyclic_Primitives.Cyclic.Group.Static<N>.Element {
-        self.init(_unchecked: Cyclic_Primitives.Cyclic.Group.Static<N>.Element(__unchecked: position))
+        self.init(
+            _unchecked: Cyclic_Primitives.Cyclic.Group.Static<N>.Element(__unchecked: position)
+        )
     }
 }
 
@@ -95,12 +101,18 @@ extension Tagged where Tag: ~Copyable & ~Escapable {
     ///
     /// - Parameter position: The position value (must be in `0..<N`).
     /// - Throws: `Cyclic.Group.Static<N>.Element.Error.outOfBounds` if position is invalid.
-    public init<let N: Int>(_ position: Int) throws(Cyclic_Primitives.Cyclic.Group.Static<N>.Element.Error)
+    public init<let N: Int>(
+        _ position: Int
+    ) throws(Cyclic_Primitives.Cyclic.Group.Static<N>.Element.Error)
     where Underlying == Cyclic_Primitives.Cyclic.Group.Static<N>.Element {
         guard position >= 0 else {
             throw .outOfBounds(position)
         }
-        self.init(_unchecked: try Cyclic_Primitives.Cyclic.Group.Static<N>.Element(Ordinal(UInt(position))))
+        self.init(
+            _unchecked: try Cyclic_Primitives.Cyclic.Group.Static<N>.Element(
+                Ordinal(UInt(position))
+            )
+        )
     }
 
     /// Creates a cyclic index without bounds checking.
@@ -110,6 +122,10 @@ extension Tagged where Tag: ~Copyable & ~Escapable {
     ///   is known to be in bounds.
     public init<let N: Int>(__unchecked position: Int)
     where Underlying == Cyclic_Primitives.Cyclic.Group.Static<N>.Element {
-        self.init(_unchecked: Cyclic_Primitives.Cyclic.Group.Static<N>.Element(__unchecked: Ordinal(UInt(position))))
+        self.init(
+            _unchecked: Cyclic_Primitives.Cyclic.Group.Static<N>.Element(
+                __unchecked: Ordinal(UInt(position))
+            )
+        )
     }
 }
