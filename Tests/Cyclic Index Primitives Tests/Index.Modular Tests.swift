@@ -71,7 +71,11 @@ extension `Index Modular Operations Dynamic Tests`.Unit {
         let capacity = Index<Int>.Count(Cardinal(10))
         let head = Index<Int>(Ordinal(2))
         let logical = Index<Int>(Ordinal(3))
-        let physical = Index<Int>.Modular.physical(forLogical: logical, head: head, capacity: capacity)
+        let physical = Index<Int>.Modular.physical(
+            forLogical: logical,
+            head: head,
+            capacity: capacity
+        )
         // swift-linter:disable:next raw value access
         // REASON: same-package test asserting the type's own boundary-computed position [CONV-001].
         #expect(physical.position == Ordinal(5))  // 2 + 3 = 5
@@ -128,7 +132,11 @@ extension `Index Modular Operations Dynamic Tests`.`Edge Case` {
         let capacity = Index<Int>.Count(Cardinal(5))
         let head = Index<Int>(Ordinal(3))
         let logical = Index<Int>(Ordinal(4))
-        let physical = Index<Int>.Modular.physical(forLogical: logical, head: head, capacity: capacity)
+        let physical = Index<Int>.Modular.physical(
+            forLogical: logical,
+            head: head,
+            capacity: capacity
+        )
         // swift-linter:disable:next raw value access
         // REASON: same-package test asserting the type's own boundary-computed position [CONV-001].
         #expect(physical.position == Ordinal(2))  // (3 + 4) mod 5 = 2
