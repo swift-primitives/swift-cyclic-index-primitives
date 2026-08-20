@@ -1,15 +1,15 @@
-// swift-tools-version: 6.3.3
+// swift-tools-version: 6.4
 
 import PackageDescription
 
 let package = Package(
     name: "swift-cyclic-index-primitives",
     platforms: [
-        .macOS("27"),
-        .iOS("27"),
-        .tvOS("27"),
-        .watchOS("27"),
-        .visionOS("27")
+        .macOS(.v27),
+        .iOS(.v27),
+        .tvOS(.v27),
+        .watchOS(.v27),
+        .visionOS(.v27),
     ],
     products: [
         .library(
@@ -19,11 +19,17 @@ let package = Package(
         .library(
             name: "Cyclic Index Primitives Test Support",
             targets: ["Cyclic Index Primitives Test Support"]
-        )
+        ),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-primitives/swift-cyclic-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-index-primitives.git", branch: "main"),
+        .package(
+            url: "https://github.com/swift-primitives/swift-cyclic-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-index-primitives.git",
+            branch: "main"
+        ),
     ],
     targets: [
         .target(
@@ -37,7 +43,10 @@ let package = Package(
             name: "Cyclic Index Primitives Test Support",
             dependencies: [
                 "Cyclic Index Primitives",
-                .product(name: "Cyclic Primitives Test Support", package: "swift-cyclic-primitives"),
+                .product(
+                    name: "Cyclic Primitives Test Support",
+                    package: "swift-cyclic-primitives"
+                ),
                 .product(name: "Index Primitives Test Support", package: "swift-index-primitives"),
             ],
             path: "Tests/Support"
@@ -46,9 +55,9 @@ let package = Package(
             name: "Cyclic Index Primitives Tests",
             dependencies: [
                 "Cyclic Index Primitives",
-                "Cyclic Index Primitives Test Support"
+                "Cyclic Index Primitives Test Support",
             ]
-        )
+        ),
     ],
     swiftLanguageModes: [.v6]
 )
