@@ -1,20 +1,7 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-primitives open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Cyclic_Index_Primitives_Test_Support
 import Testing
 
 @testable import Cyclic_Index_Primitives
-
-// MARK: - Cyclic Test Suites
 
 @Suite
 struct `Index Cyclic Tests` {
@@ -26,8 +13,6 @@ struct `Index Cyclic Tests` {
     @Suite struct `Edge Case` {}
     @Suite struct Integration {}
 }
-
-// MARK: - Construction Tests
 
 extension `Index Cyclic Tests`.Unit.Construction {
     @Test
@@ -44,7 +29,7 @@ extension `Index Cyclic Tests`.Unit.Construction {
 
     @Test
     func `init with max valid position returns index`() throws {
-        let index = try Index<Int>.Cyclic<5>.init(4)  // N-1
+        let index = try Index<Int>.Cyclic<5>.init(4)
         #expect(index == 4)
     }
 
@@ -75,8 +60,6 @@ extension `Index Cyclic Tests`.Unit.Construction {
         }
     }
 }
-
-// MARK: - Arithmetic Tests
 
 extension `Index Cyclic Tests`.Unit.Arithmetic {
     @Test
@@ -148,30 +131,28 @@ extension `Index Cyclic Tests`.Unit.Arithmetic {
 
     @Test
     func `cyclic addition wraps at bound`() throws {
-        let index = try Index<Int>.Cyclic<5>.init(4)  // N-1
+        let index = try Index<Int>.Cyclic<5>.init(4)
         let result = index + .one
-        #expect(result == 0)  // Wraps to 0
+        #expect(result == 0)
     }
 
     @Test
     func `cyclic subtraction wraps at zero`() throws {
         let index = try Index<Int>.Cyclic<5>.init(0)
         let result = index - .one
-        #expect(result == 4)  // Wraps to N-1
+        #expect(result == 4)
     }
 
     @Test
     func `multiple wrap-arounds`() throws {
         var index = try Index<Int>.Cyclic<3>.init(0)
-        index += .one  // 1
-        index += .one  // 2
-        index += .one  // 0 (wrap)
-        index += .one  // 1
+        index += .one
+        index += .one
+        index += .one
+        index += .one
         #expect(index == 1)
     }
 }
-
-// MARK: - Conformance Tests
 
 extension `Index Cyclic Tests`.Unit.Conformances {
     @Test
@@ -218,17 +199,15 @@ extension `Index Cyclic Tests`.Unit.Conformances {
     }
 }
 
-// MARK: - Edge Case Tests
-
 extension `Index Cyclic Tests`.`Edge Case` {
     @Test
     func `single element cyclic space`() throws {
         let index = try Index<Int>.Cyclic<1>.init(0)
         let incremented = index + .one
-        #expect(incremented == 0)  // Wraps back to 0
+        #expect(incremented == 0)
 
         let decremented = index - .one
-        #expect(decremented == 0)  // Wraps back to 0
+        #expect(decremented == 0)
     }
 
     @Test
@@ -239,12 +218,10 @@ extension `Index Cyclic Tests`.`Edge Case` {
         let a = try Index<Alpha>.Cyclic<5>.init(3)
         let b = try Index<Beta>.Cyclic<5>.init(3)
 
-        // Both equal 3, but different types prevent direct comparison
         #expect(a == 3)
         #expect(b == 3)
         #expect(type(of: a) != type(of: b))
 
-        // Cannot compare a == b due to different types (compile-time safety)
     }
 
     @Test
